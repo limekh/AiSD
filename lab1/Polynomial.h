@@ -46,12 +46,17 @@ public:
 
 	//Оператор присваивания
 	Polynomial operator=(const Polynomial& other) {
+		if (this == other) {
+			return *this;
+		}
+		
 		delete[] coefficient;
 		degree = (other.degree);
 		coefficient = new T[other.degree + 1]();
 		for (size_t i = 0; i <= degree; ++i) {
 			coefficient[i] = other.coefficient[i];
 		}
+		
 		return *this;
 	}
 
