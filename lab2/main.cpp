@@ -85,6 +85,15 @@ public:
 		else tail = nullptr;
 		delete temp;
 	}
+
+	void pop_tail() {
+		if (!list) return;
+		Node<T>* temp = tail;
+		tail = tail->prev;
+		if (tail) tail->next = nullptr;
+		else head = nullptr;
+		delete temp;
+	}
 };
 
 int main() {
