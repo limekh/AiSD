@@ -1,0 +1,12 @@
+# ninja log v5
+15	849	7523408139479937	CMakeFiles/lab1.dir/derivative.cpp.obj	72cdce9fc850aa02
+18	850	7523408139489914	CMakeFiles/lab1.dir/main.cpp.obj	49a320b0be4d3d1d
+12	850	7523408139479937	CMakeFiles/lab1.dir/Polynomial.cpp.obj	14cc78952f0f6ae9
+7	1063	7523466905909100	CMakeFiles/lab1.dir/derivative.cpp.obj	72cdce9fc850aa02
+10	732	7523467614300560	CMakeFiles/lab1.dir/derivative.cpp.obj	72cdce9fc850aa02
+10	711	7523467972542811	CMakeFiles/lab1.dir/derivative.cpp.obj	72cdce9fc850aa02
+13	734	7523467972775205	CMakeFiles/lab1.dir/main.cpp.obj	49a320b0be4d3d1d
+735	970	7523467975027594	lab1.exe	b89429f26f61d48c
+2	771	7532979877128978	CMakeFiles/lab1.dir/derivative.cpp.obj	72cdce9fc850aa02
+6	777	7532979877186619	CMakeFiles/lab1.dir/main.cpp.obj	49a320b0be4d3d1d
+777	970	7532979878627210	lab1.exe	b89429f26f61d48c
