@@ -55,6 +55,14 @@ public:
 			head = newNode;
 		}
 	}
+
+	void push_head(const LinkedList& other) {
+		Node<T>* current = other.tail;
+		while (current) {
+			push_head(current->data);
+			current = current->prev;
+		}
+	}
 };
 
 int main() {
