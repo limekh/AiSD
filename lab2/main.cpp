@@ -43,6 +43,18 @@ public:
 			current = current->next;
 		}
 	}
+
+	void push_head(const T& value) {
+		Node<T>* newNode = new Node<T>(value);
+		if (!head) {
+			head = tail = newNode;
+		}
+		else {
+			newNode->next = head;
+			head->prev = newNode;
+			head = newNode;
+		}
+	}
 };
 
 int main() {
