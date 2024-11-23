@@ -23,6 +23,13 @@ public:
 		}
 	}
 
+	LinkedList(size_t size, unsigned seed) : head(nullptr), tail(nullptr) {
+		std::srand(seed);
+		for (size_t i = 0; i < size; ++i) {
+			push_tail(std::rand() % 1000);
+		}
+	}
+
 	~LinkedList() {
 		while (head) {
 			pop_head();
