@@ -63,6 +63,15 @@ public:
 			current = current->prev;
 		}
 	}
+
+	void pop_head() {
+		if (!head) return;
+		Node<T>* temp = head;
+		head = head->next;
+		if (head) head->prev = nullptr;
+		else tail = nullptr;
+		delete temp;
+	}
 };
 
 int main() {
