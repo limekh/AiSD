@@ -23,6 +23,12 @@ public:
 		}
 	}
 
+	~LinkedList() {
+		while (head) {
+			pop_head();
+		}
+	}
+
 	void push_tail(const T& value) {
 		Node<T>* new_node = new Node<T>(value);
 		if (!tail) {
