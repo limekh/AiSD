@@ -94,6 +94,20 @@ public:
 		else head = nullptr;
 		delete temp;
 	}
+
+	void delete_node(const T& value) {
+		Node<T>* p = head;
+		while (p) {
+			if (p->data == value) {
+				Node<T>* for_delete = p;
+				if (for_delete->next) for_delete->prev->next = for_delete->next;
+				if (for_delete->prev) for_delete->next->prev = for_delete->prev;
+				if (for_delete == head) head = for_delete->next;
+				if (for_delete == tail) tail = for_delete->prev;
+			}
+			else p = p->next;
+		}
+	}
 };
 
 int main() {
