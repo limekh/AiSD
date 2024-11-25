@@ -122,6 +122,15 @@ public:
 		}
 		return *this;
 	}
+
+	T& operator[](size_t index) {
+		Node<T>* p = head:
+		for (size_t i = 0; i < index; ++i) {
+			if (!p) throw std::out_of_range("Wrong Index");
+			p = p->next;
+		}
+		return p->data;
+	}
 };
 
 int main() {
