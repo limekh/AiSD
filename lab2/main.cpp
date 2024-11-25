@@ -108,6 +108,20 @@ public:
 			else p = p->next;
 		}
 	}
+
+	LinkedList& operator=(const LinkedList& other){
+		if (this != other) {
+			while (head) {
+				pop_head();
+			}
+			Node<T>* p = other.head;
+			while (p) {
+				push_tail(p->data);
+				p = p->next;
+			}
+		}
+		return *this;
+	}
 };
 
 int main() {
