@@ -3,6 +3,7 @@
 template <typename T>
 class LinkedList {
 
+	template <typename T>
 	struct Node {
 		T data;
 		Node* next;
@@ -10,8 +11,9 @@ class LinkedList {
 
 		Node(const T& value) : data(value), next(nullptr), prev(nullptr) {}
 	};
-	Node<T>* head;
-	Node<T>* tail;
+
+	Node <T>* head;
+	Node <T>* tail;
 
 public:
 	LinkedList() : head(nullptr), tail(nullptr) {}
@@ -87,7 +89,7 @@ public:
 	}
 
 	void pop_tail() {
-		if (!list) return;
+		if (!tail) return;
 		Node<T>* temp = tail;
 		tail = tail->prev;
 		if (tail) tail->next = nullptr;
@@ -100,10 +102,13 @@ public:
 		while (p) {
 			if (p->data == value) {
 				Node<T>* for_delete = p;
-				if (for_delete->next) for_delete->prev->next = for_delete->next;
-				if (for_delete->prev) for_delete->next->prev = for_delete->prev;
-				if (for_delete == head) head = for_delete->next;
-				if (for_delete == tail) tail = for_delete->prev;
+				if (p->prev) p->prev->next = p->next;
+				if (p->next) p->next->prev = p->prev;
+				
+				if (p == head) head = p->next;
+				if (p == tail) tail = p->prev;
+				p = p->next;
+				delete for_delete;
 			}
 			else p = p->next;
 		}
@@ -124,18 +129,45 @@ public:
 	}
 
 	T& operator[](size_t index) {
-		Node<T>* p = head:
+		Node<T>* p = head;
 		for (size_t i = 0; i < index; ++i) {
 			if (!p) throw std::out_of_range("Wrong Index");
 			p = p->next;
 		}
 		return p->data;
 	}
+
+	template <typename T>
+	friend std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list) {
+		Node<T>* p = list.head;
+		os << "[ ";
+		while (p) {
+			os << p->data << " ";
+			p = p->next;
+		}
+		os << "]\n";
+		return os;
+	}
 };
+
+
 
 int main() {
 
+	LinkedList<int> list = LinkedList<int>(5, 1);
+	std::cout << list;
 
+	list.push_tail(334);
+	list.push_tail(123);
+	list.push_head(456);
+	std::cout << list;
+
+	list.pop_head();
+	list.pop_tail();
+	std::cout << list;
+
+	list.delete_node(334);
+	std::cout << list;
 
 	return 0;
 }
