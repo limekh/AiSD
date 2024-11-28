@@ -65,7 +65,6 @@ public:
 	}
 
 	void push_head(const T& value) {
-		if (value == 0) return;
 		Node<T>* newNode = new Node<T>(value);
 		if (!head) {
 			head = tail = newNode;
@@ -120,8 +119,23 @@ public:
 		}
 	}
 
-	LinkedList& operator=(const LinkedList& other){
-		if (this != other) {
+	bool operator==(const LinkedList<T>& other) {
+		Node<T>* p1 = head;
+		Node<T>* p2 = other.head;
+		while (p1 && p2) {
+			if (p1->data != p2->data) return false;
+			p1 = p1->next;
+			p2 = p2->next;
+		}
+		return !(p1 || p2);
+	}
+
+	bool operator!=(const LinkedList<T>& other) {
+		return !(*this == other);
+	}
+
+	LinkedList& operator=(const LinkedList<T>& other){
+		if (*this != other) {
 			while (head) {
 				pop_head();
 			}
@@ -178,9 +192,37 @@ LinkedList<T> sum_list(const LinkedList<T>& list, const LinkedList<T>& other) {
 	return result;
 }
 
+template <typename T>
+LinkedList<T> mult_list(const LinkedList<T>& list, const LinkedList<T>& other) {
+	LinkedList<T> result;
+	Node<T>* p1 = other.get_tail();
+	int position = 0;
+
+	while (p1) {
+		LinkedList<T> cur_result;
+		Node<T>* p2 = list.get_tail();
+		int carry = 0;
+		for (int i = 0; i < position; ++i) cur_result.push_tail(0);
+		while (p2) {
+			int mul = p1->data * p2->data + carry;
+			carry = mul / 10;
+			int digit = mul % 10;
+			cur_result.push_head(digit);
+			p2 = p2->prev;
+		}
+		if (carry > 0) {
+			cur_result.push_head(carry);
+		}
+		result = sum_list(result, cur_result);
+		p1 = p1->prev;
+		position++;
+	}
+	return result;
+}
+
 int main() {
 
-	LinkedList<int> list = LinkedList<int>(3, 1);
+	LinkedList<int> list = LinkedList<int>(4, 2);
 	LinkedList<int> copy = list;
 	std::cout << "list: " << list;
 	std::cout << "copy: " << copy;
@@ -199,6 +241,7 @@ int main() {
 	std::cout << "delete_node: " << list;
 
 	std::cout << "SUM equals: " << sum_list(list, copy);
+	std::cout << "MULT equals: " << mult_list(list, copy);
 
 	return 0;
 }
