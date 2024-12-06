@@ -137,18 +137,39 @@ void num_for_rand() {
 	for (size_t size : sizes) {
 		cout << "\nVector size: " << size << "\n";
 		for(size_t i = 0; i < sort_funcs.size(); ++i){ 
+			result.comparison_count = 0;
+			result.copy_count = 0;
 			for (size_t j = 0; j < 100; ++j) {
-				vector<int> vec = random_vec(100, j);
+				vector<int> vec = random_vec(size, 1);
 				st = sort_funcs[i](vec);
 				result.comparison_count += st.comparison_count;
 				result.copy_count += st.copy_count;
 			}
+			cout << "Average Comparison Count: " << result.comparison_count / 100 << "\n";
+			cout << "Average Copy Count: " << result.copy_count / 100 << "\n";
 		}
-		cout << "Average Comparison Count: " << result.comparison_count / 100 << "\n";
-		cout << "Average Copy Count: " << result.copy_count / 100 << "\n";
+		
 	}
 }
 
+void num_for_sorted() {
+	stats st, result;
+	vector<size_t> sizes = { 1000, 2000, 3000, 5000, 10000, 25000, 50000, 100000 };
+	vector<function<stats(std::vector<int>&)>> sort_funcs = { bubble_sort, shells_sort, heap_sort };
+	for (size_t size : sizes) {
+		cout << "\nVector size: " << size << "\n";
+		for (size_t i = 0; i < sort_funcs.size(); ++i) {
+			result.comparison_count = 0;
+			result.copy_count = 0;
+			vector<int> vec = sorted_vec(size);
+			st = sort_funcs[i](vec);
+			result.comparison_count += st.comparison_count;
+			result.copy_count += st.copy_count;
+			cout << "Average Comparison Count: " << result.comparison_count / 100 << "\n";
+			cout << "Average Copy Count: " << result.copy_count / 100 << "\n";
+		}
+	}
+}
 
 int main() {
 
@@ -178,7 +199,10 @@ int main() {
 	cout << "Copy Count: " << heap.copy_count << "\n";
 
 	cout << "\n100 RANDOM VECTORS: \n";
-	num_for_rand();
+	//num_for_rand();
+
+	cout << "\nSORTED VECTORS: \n";
+	num_for_sorted();
 
 	return 0;
 }
