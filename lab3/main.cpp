@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <functional>
 
 using namespace std;
 
@@ -104,6 +105,51 @@ stats heap_sort(vector<int>& vec) {
 
 
 
+vector<int> random_vec(const size_t& size, unsigned seed) {
+	vector<int> vec(size);
+	srand(seed);
+	for (size_t i = 0; i < size; ++i) {
+		vec[i] = rand() % 1000;
+	}
+	return vec;
+}
+
+vector<int> sorted_vec(const size_t& size) {
+	vector<int> vec(size);
+	for (size_t i = 0; i < size; ++i) {
+		vec[i] = i;
+	}
+	return vec;
+}
+
+vector<int> reverse_sorted_vec(const size_t& size) {
+	vector<int> vec(size);
+	for (size_t i = 0; i < size; ++i) {
+		vec[i] = size - i;
+	}
+	return vec;
+}
+
+void num_for_rand() {
+	stats st, result;
+	vector<size_t> sizes = { 1000, 2000, 3000, 5000, 10000, 25000, 50000, 100000 };
+	vector<function<stats(std::vector<int>&)>> sort_funcs = { bubble_sort, shells_sort, heap_sort };
+	for (size_t size : sizes) {
+		cout << "\nVector size: " << size << "\n";
+		for(size_t i = 0; i < sort_funcs.size(); ++i){ 
+			for (size_t j = 0; j < 100; ++j) {
+				vector<int> vec = random_vec(100, j);
+				st = sort_funcs[i](vec);
+				result.comparison_count += st.comparison_count;
+				result.copy_count += st.copy_count;
+			}
+		}
+		cout << "Average Comparison Count: " << result.comparison_count / 100 << "\n";
+		cout << "Average Copy Count: " << result.copy_count / 100 << "\n";
+	}
+}
+
+
 int main() {
 
 	vector<int> vec1 = { 745, 983, 665, 368, 824, 777, 703, 107, 501, 237 };
@@ -130,6 +176,9 @@ int main() {
 	cout << vec3;
 	cout << "Comparison Count: " << heap.comparison_count << "\n";
 	cout << "Copy Count: " << heap.copy_count << "\n";
+
+	cout << "\n100 RANDOM VECTORS: \n";
+	num_for_rand();
 
 	return 0;
 }
