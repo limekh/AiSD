@@ -16,6 +16,8 @@ ostream& operator<<(ostream& os, vector<int> vec) {
 	return os;
 }
 
+
+
 stats bubble_sort(vector<int>& vec) {
 	stats st;
 	for (size_t i = 0; i < vec.size(); ++i) {
@@ -32,6 +34,8 @@ stats bubble_sort(vector<int>& vec) {
 
 	return st;
 }
+
+
 
 stats shells_sort(vector<int>& vec) {
 	stats st;
@@ -59,6 +63,47 @@ stats shells_sort(vector<int>& vec) {
 	return st;
 }
 
+
+
+void heapify(vector<int>& vec, int n, int i, size_t& comparison, size_t& copy) {
+	int largest = i;
+	int left = 2 * i + 1; 
+	int right = 2 * i + 2; 
+
+	comparison++;
+	if (left < n && vec[left] > vec[largest]) {
+		largest = left;
+	}
+
+	comparison++;
+	if (right < n && vec[right] > vec[largest]) {
+		largest = right;
+	}
+
+	if (largest != i) {
+		swap(vec[i], vec[largest]);
+		copy += 3;
+		heapify(vec, n, largest, comparison, copy);
+	}
+}
+stats heap_sort(vector<int>& vec) {
+	stats st;
+
+	for (int i = vec.size() / 2 - 1; i >= 0; --i) {
+		heapify(vec, vec.size(), i, st.comparison_count, st.copy_count);
+	}
+
+	for (int i = vec.size() - 1; i >= 1; --i) {
+		swap(vec[0], vec[i]);
+		st.copy_count += 3;
+		heapify(vec, i, 0, st.comparison_count, st.copy_count);
+	}
+
+	return st;
+}
+
+
+
 int main() {
 
 	vector<int> vec1 = { 745, 983, 665, 368, 824, 777, 703, 107, 501, 237 };
@@ -78,6 +123,13 @@ int main() {
 	cout << vec2;
 	cout << "Comparison Count: " << shells.comparison_count << "\n";
 	cout << "Copy Count: " << shells.copy_count << "\n";
+
+	cout << "\nVector_3: " << vec3;
+	stats heap = heap_sort(vec3);
+	cout << "\n" << "HEAP SORT\n";
+	cout << vec3;
+	cout << "Comparison Count: " << heap.comparison_count << "\n";
+	cout << "Copy Count: " << heap.copy_count << "\n";
 
 	return 0;
 }
