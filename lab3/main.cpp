@@ -18,10 +18,8 @@ ostream& operator<<(ostream& os, vector<int> vec) {
 
 stats bubble_sort(vector<int>& vec) {
 	stats st;
-
-	size_t size = vec.size();
-	for (size_t i = 0; i < size; ++i) {
-		for (size_t j = 0; j < size - i - 1; ++j) {
+	for (size_t i = 0; i < vec.size(); ++i) {
+		for (size_t j = 0; j < vec.size() - i - 1; ++j) {
 
 			++st.comparison_count;
 
@@ -30,6 +28,32 @@ stats bubble_sort(vector<int>& vec) {
 				st.copy_count += 3;
 			}
 		}
+	}
+
+	return st;
+}
+
+stats shells_sort(vector<int>& vec) {
+	stats st;
+	int temp = 0;
+	size_t j = 0;
+	size_t step = vec.size() / 2;
+
+	while (step > 0) {
+		for (size_t i = step; i < vec.size(); ++i) {
+			temp = vec[i];
+			j = i;
+			st.comparison_count++;
+			while (j >= step && vec[j - step] > temp) {
+				vec[j] = vec[j - step];
+				j -= step;
+				st.copy_count++;
+				st.comparison_count++;
+			}
+			vec[j] = temp;
+			st.copy_count++;
+		}
+		step /= 2;
 	}
 
 	return st;
@@ -47,6 +71,13 @@ int main() {
 	cout << vec1;
 	cout << "Comparison Count: " << bubble.comparison_count << "\n";
 	cout << "Copy Count: " << bubble.copy_count << "\n";
+
+	cout << "\nVector_2: " << vec2;
+	stats shells = shells_sort(vec2);
+	cout << "\n" << "SHELLS SORT\n";
+	cout << vec2;
+	cout << "Comparison Count: " << shells.comparison_count << "\n";
+	cout << "Copy Count: " << shells.copy_count << "\n";
 
 	return 0;
 }
