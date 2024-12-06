@@ -165,8 +165,27 @@ void num_for_sorted() {
 			st = sort_funcs[i](vec);
 			result.comparison_count += st.comparison_count;
 			result.copy_count += st.copy_count;
-			cout << "Average Comparison Count: " << result.comparison_count / 100 << "\n";
-			cout << "Average Copy Count: " << result.copy_count / 100 << "\n";
+			cout << "Comparison Count: " << result.comparison_count << "\n";
+			cout << "Copy Count: " << result.copy_count << "\n";
+		}
+	}
+}
+
+void num_for_reverse_sorted() {
+	stats st, result;
+	vector<size_t> sizes = { 1000, 2000, 3000, 5000, 10000, 25000, 50000, 100000 };
+	vector<function<stats(std::vector<int>&)>> sort_funcs = { bubble_sort, shells_sort, heap_sort };
+	for (size_t size : sizes) {
+		cout << "\nVector size: " << size << "\n";
+		for (size_t i = 0; i < sort_funcs.size(); ++i) {
+			result.comparison_count = 0;
+			result.copy_count = 0;
+			vector<int> vec = reverse_sorted_vec(size);
+			st = sort_funcs[i](vec);
+			result.comparison_count += st.comparison_count;
+			result.copy_count += st.copy_count;
+			cout << "Comparison Count: " << result.comparison_count << "\n";
+			cout << "Copy Count: " << result.copy_count << "\n";
 		}
 	}
 }
@@ -203,6 +222,9 @@ int main() {
 
 	cout << "\nSORTED VECTORS: \n";
 	num_for_sorted();
+
+	cout << "\nREVERSE SORTED VECTORS: \n";
+	num_for_reverse_sorted();
 
 	return 0;
 }
