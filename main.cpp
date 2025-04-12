@@ -163,41 +163,34 @@ public:
 int main() {
 
 	try {
-		// 1. Создаем хеш-таблицу для строк (ключ - int, значение - string)
 		HashTable<int, std::string> ht(10);
 
-		// 2. Тестируем insert и print
 		std::cout << "=== Testing insert ===" << std::endl;
 		ht.insert(1, "one");
 		ht.insert(2, "two");
-		ht.insert(11, "eleven"); // Должно попасть в ту же корзину что и 1 (коллизия)
+		ht.insert(11, "eleven");
 		ht.insert(12, "twelve");
 		ht.print();
 
-		// 3. Тестируем operator[]
 		std::cout << "\n=== Testing operator[] ===" << std::endl;
 		std::cout << "ht[1] = " << ht[1] << std::endl;
 		std::cout << "ht[2] = " << ht[2] << std::endl;
 
-		// 4. Тестируем insert_or_assign
 		std::cout << "\n=== Testing insert_or_assign ===" << std::endl;
 		std::string one = "ONE";
 		std::string three = "three";
 
-		ht.insert_or_assign(1, one);  // Обновляем значение
-		ht.insert_or_assign(3, three); // Добавляем новый ключ
+		ht.insert_or_assign(1, one);
+		ht.insert_or_assign(3, three);
 		ht.print();
 
-		// 5. Тестируем contains
 		std::cout << "\n=== Testing contains ===" << std::endl;
-		//std::string one = "ONE";
 		std::string four = "four";
 
 		std::cout << "Contains 'ONE': " << (ht.contains(one) ? "true" : "false") << std::endl;
 		std::cout << "Contains 'four': " << (ht.contains(four) ? "true" : "false") << std::endl;
 
 
-		// 6. Тестируем search
 		std::cout << "\n=== Testing search ===" << std::endl;
 		std::string* val = ht.search(2);
 		if (val) {
@@ -207,29 +200,17 @@ int main() {
 			std::cout << "Key 2 not found" << std::endl;
 		}
 
-		// 7. Тестируем count
 		std::cout << "\n=== Testing count ===" << std::endl;
 		std::cout << "Elements in bucket for key 1: " << ht.count(1) << std::endl;
 
-		// 8. Тестируем erase
 		std::cout << "\n=== Testing erase ===" << std::endl;
 		std::cout << "Erase key 1: " << (ht.erase(1) ? "success" : "failed") << std::endl;
 		std::cout << "Erase key 5: " << (ht.erase(5) ? "success" : "failed") << std::endl;
 		ht.print();
-
-		// 9. Тестируем clear
+		
 		std::cout << "\n=== Testing clear ===" << std::endl;
 		ht.clear();
 		ht.print();
-
-		// 10. Тестируем обработку ошибок
-		//std::cout << "\n=== Testing error handling ===" << std::endl;
-		//try {
-		//	std::cout << ht[99] << std::endl; // Должно бросить исключение
-		//}
-		//catch (const std::exception& e) {
-		//	std::cout << "Error: " << e.what() << std::endl;
-		//}
 
 	}
 	catch (const std::exception& e) {
