@@ -1,7 +1,10 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <vector>
 
+std::string generateRandomRoman();
+int romanToDecimal(const std::string& roman);
 
 template<typename K, typename T>
 class HashTable {
@@ -13,14 +16,24 @@ private:
 
 		Node(const K& k, const T& v, Node* n) : key(k), value(v), next(n) {}
 	};
-	
+
 	Node** array;
 	size_t size;
 public:
 	HashTable(size_t size) : size(size) {
-		array = new Node*[size];
+		array = new Node * [size];
 		for (size_t i = 0; i < size; ++i) {
 			array[i] = nullptr;
+		}
+	}
+
+	HashTable(size_t table_size, size_t num_elements) : HashTable(table_size) {
+		if constexpr (std::is_same_v<K, std::string> && std::is_same_v<T, int>) {
+			for (size_t i = 0; i < num_elements; ++i) {
+				std::string roman = generateRandomRoman();
+				int decimal = romanToDecimal(roman);
+				insert(roman, decimal);
+			}
 		}
 	}
 
@@ -30,7 +43,7 @@ public:
 	}
 
 	HashTable(const HashTable& other) {
-		array = new Node*[size];
+		array = new Node * [size];
 		for (size_t i = 0; i < size; ++i) {
 			array[i] = nullptr;
 			Node* current = other.array[i];
@@ -159,37 +172,103 @@ public:
 	}
 
 	HashTable& operator=(const HashTable& other) {
-	if (this != &other) {
-		clear();
-		delete[] array;
+		if (this != &other) {
+			clear();
+			delete[] array;
 
-		size = other.size;
-		array = new Node * [size];
+			size = other.size;
+			array = new Node * [size];
 
-		for (size_t i = 0; i < size; ++i) {
-			array[i] = nullptr;
-			Node* current = other.array[i];
-			Node* prev = nullptr;
+			for (size_t i = 0; i < size; ++i) {
+				array[i] = nullptr;
+				Node* current = other.array[i];
+				Node* prev = nullptr;
 
-			while (current) {
-				Node* newNode = new Node(current->key, current->value, nullptr);
+				while (current) {
+					Node* newNode = new Node(current->key, current->value, nullptr);
 
-				if (prev) {
-					prev->next = newNode;
+					if (prev) {
+						prev->next = newNode;
+					}
+					else {
+						array[i] = newNode;
+					}
+
+					prev = newNode;
+					current = current->next;
 				}
-				else {
-					array[i] = newNode;
-				}
-
-				prev = newNode;
-				current = current->next;
 			}
 		}
+		return *this;
 	}
-	return *this;
-}
 };
 
+int romanCharToValue(char c) {
+	switch (toupper(c)) {
+		case 'I': return 1;
+		case 'V': return 5;
+		case 'X': return 10;
+		case 'L': return 50;
+		case 'C': return 100;
+		case 'D': return 500;
+		case 'M': return 1000;
+		default: throw std::invalid_argument(std::string("Invalid Roman numeral") + c);
+	}
+}
+
+int romanToDecimal(const std::string& roman) {
+	if (roman.empty()) {
+		throw std::invalid_argument("Empty Roman numeral string");
+	}
+
+	int total = 0;
+	int prevValue = 0;
+
+	for (int i = roman.length() - 1; i >= 0; i--) {
+		char currentChar = roman[i];
+		int currentValue = romanCharToValue(currentChar);
+
+		if (currentValue < prevValue) {
+			total -= currentValue;
+		}
+		else {
+			total += currentValue;
+		}
+
+		prevValue = currentValue;
+	}
+
+	return total;
+}
+
+std::string generateRandomRoman() {
+	static const std::vector<std::pair<int, std::string>> values = {
+		{1000, "M"}, {900, "CM"}, {500, "D"}, {400, "CD"},
+		{100, "C"}, {90, "XC"}, {50, "L"}, {40, "XL"},
+		{10, "X"}, {9, "IX"}, {5, "V"}, {4, "IV"}, {1, "I"}
+	};
+
+	int num = 1 + rand() % 3999;
+	std::string roman;
+
+	for (const auto& [val, sym] : values) {
+		while (num >= val) {
+			roman += sym;
+			num -= val;
+		}
+	}
+	return roman;
+}
+
+template <>
+size_t HashTable<std::string, int>::hash_function(const std::string& key) const {
+	int decimalValue = romanToDecimal(key);
+	size_t a = 3795218735u;
+
+	double hashValue = (static_cast<double>(a) / 32) * decimalValue;
+	hashValue -= static_cast<int>(hashValue);
+	return static_cast<size_t>(size * hashValue) % size;
+}
 
 int main() {
 
@@ -238,7 +317,7 @@ int main() {
 		std::cout << "Erase key 1: " << (ht.erase(1) ? "success" : "failed") << std::endl;
 		std::cout << "Erase key 5: " << (ht.erase(5) ? "success" : "failed") << std::endl;
 		ht.print();
-		
+
 		std::cout << "\n=== Testing clear ===" << std::endl;
 		ht.clear();
 		ht.print();
@@ -252,6 +331,48 @@ int main() {
 		ht2 = ht1;
 		ht1.print();
 		ht2.print();
+
+		std::cout << "\n=== Testing Roman Task ===" << "\n";
+		std::srand(static_cast<unsigned>(std::time(nullptr)));
+
+		try {
+			HashTable<std::string, int> romanNumbers(20, 10);
+			std::cout << "Hash table create with 10 random values.\n";
+
+			while (true) {
+				std::cout << "\nEnter Roman number (or 'exit' for exit): ";
+				std::string input;
+				std::cin >> input;
+
+				if (input == "exit") break;
+
+				try {
+					int decimal = romanToDecimal(input);
+					std::cout << "Decimal value: " << decimal << std::endl;
+
+					try {
+						romanNumbers.insert(input, decimal);
+						std::cout << "Add in Hash table.\n";
+					}
+					catch (const std::exception& e) {
+						std::cout << "Error to add: " << e.what() << "\n";
+					}
+
+				}
+				catch (const std::exception& e) {
+					std::cout << "Error: " << e.what() << "\n";
+					std::cout << "Roman number exists only: I, V, X, L, C, D, M\n";
+				}
+			}
+
+			std::cout << "\nFinal Hash table:\n";
+			romanNumbers.print();
+
+		}
+		catch (const std::exception& e) {
+			std::cerr << "Critical error: " << e.what() << std::endl;
+			return 1;
+		}
 
 	}
 	catch (const std::exception& e) {
