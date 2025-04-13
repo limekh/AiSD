@@ -157,6 +157,37 @@ public:
 			array[i] = nullptr;
 		}
 	}
+
+	HashTable& operator=(const HashTable& other) {
+	if (this != &other) {
+		clear();
+		delete[] array;
+
+		size = other.size;
+		array = new Node * [size];
+
+		for (size_t i = 0; i < size; ++i) {
+			array[i] = nullptr;
+			Node* current = other.array[i];
+			Node* prev = nullptr;
+
+			while (current) {
+				Node* newNode = new Node(current->key, current->value, nullptr);
+
+				if (prev) {
+					prev->next = newNode;
+				}
+				else {
+					array[i] = newNode;
+				}
+
+				prev = newNode;
+				current = current->next;
+			}
+		}
+	}
+	return *this;
+}
 };
 
 
@@ -211,6 +242,16 @@ int main() {
 		std::cout << "\n=== Testing clear ===" << std::endl;
 		ht.clear();
 		ht.print();
+
+		std::cout << "\n=== Testing operator= ===" << "\n";
+		HashTable<int, std::string> ht1(5);
+		ht1.insert(1, "one");
+		ht1.insert(2, "two");
+
+		HashTable<int, std::string> ht2(3);
+		ht2 = ht1;
+		ht1.print();
+		ht2.print();
 
 	}
 	catch (const std::exception& e) {
